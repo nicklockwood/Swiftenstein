@@ -1,0 +1,4 @@
+language: swift
+osx_image: xcode10.1
+
+script: xcodebuild build -scheme Swiftenstein -destination 'platform=iOS Simulator,name=iPhone 8 Plus,OS=12.1'
