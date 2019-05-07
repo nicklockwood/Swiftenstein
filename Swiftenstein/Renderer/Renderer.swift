@@ -25,7 +25,7 @@ extension World {
             let cameraX = 2 * Double(x) / Double(width) - 1
             let rayDir = dir + plane * cameraX
 
-            var tile = Vector(floor(pos.x), floor(pos.y))
+            var tile = floor(pos)
             let delta = abs(1 / rayDir)
             let stepX, stepY: Double
             var sideX, sideY: Double
@@ -55,11 +55,14 @@ extension World {
             // perform DDA
             var doorFrameTexture: Int?
             var side: Side = .northSouth
-            while case let mapTile = map[tile], mapTile.isFloorOrDoor {
-                if case let .door(_, frameTexNum) = mapTile {
+            loop: while true {
+                switch map[tile] {
+                case let .door(_, frameTexNum), let .elevator(frameTexNum):
                     doorFrameTexture = frameTexNum
-                } else {
+                case .floor:
                     doorFrameTexture = nil
+                case .wall, .pushWall, .switch:
+                    break loop
                 }
                 if sideX < sideY {
                     sideX += delta.x
@@ -116,13 +119,16 @@ extension World {
             hits.sort(by: { $0.2 < $1.2 })
 
             let texNum: Int
+            let mapTile = map[tile]
             if let (partition, t2, t1) = hits.first {
                 z = t1
                 texNum = partition.texture
                 wallX = t2
                 side = (partition.start.x == partition.end.x) ? .northSouth : .eastWest
+            } else if case .switch = mapTile {
+                texNum = mapTile.wallTexture
             } else {
-                texNum = doorFrameTexture ?? map[tile].wallTexture
+                texNum = doorFrameTexture ?? mapTile.wallTexture
             }
 
             let lineHeight = Double(height) * vscale / z

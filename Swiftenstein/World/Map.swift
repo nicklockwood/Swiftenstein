@@ -7,17 +7,21 @@
 
 import Foundation
 
-enum MapTile: Equatable {
+enum MapTile {
     case floor
     case wall(Int)
     case pushWall(Int)
     case door(Int, frame: Int)
+    case elevator(Int)
+    case `switch`(Int, alt: Int)
 
     var wallTexture: Int {
         switch self {
         case let .wall(texNum),
              let .pushWall(texNum),
-             let .door(_, frame: texNum):
+             let .door(_, frame: texNum),
+             let .elevator(texNum),
+             let .switch(texNum, _):
             return texNum
         default:
             return -1
@@ -26,9 +30,9 @@ enum MapTile: Equatable {
 
     var isFloorOrDoor: Bool {
         switch self {
-        case .floor, .door:
+        case .floor, .door, .elevator:
             return true
-        case .wall, .pushWall:
+        case .wall, .pushWall, .switch:
             return false
         }
     }
@@ -40,8 +44,16 @@ struct Map {
     var tiles: [MapTile]
 
     subscript(x: Int, y: Int) -> MapTile {
-        get { return tiles[y * width + x] }
-        set { tiles[y * width + x] = newValue }
+        get {
+            if x < 0 || x >= width || y < 0 || y >= width {
+                return .wall(0) // TODO: sky
+            }
+            return tiles[y * width + x]
+        }
+        set {
+            assert((0 ..< width).contains(x) && (0 ..< height).contains(y))
+            tiles[y * width + x] = newValue
+        }
     }
 
     subscript(v: Vector) -> MapTile {
@@ -58,7 +70,7 @@ struct Map {
 
     func hitTest(_ ray: Ray) -> Double {
         let (pos, dir) = (ray.origin, ray.direction)
-        var tile = Vector(floor(pos.x), floor(pos.y))
+        var tile = floor(pos)
         let delta = abs(1 / dir)
         let stepX, stepY: Double
         var sideX, sideY: Double

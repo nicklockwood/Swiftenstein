@@ -36,7 +36,7 @@ class Door: Trigger {
 
     private func updatePartition(_ progress: Double) {
         let start: Vector, end: Vector
-        if world.map[Int(position.x) - 1, Int(position.y)] == .floor {
+        if case .floor = world.map[Int(position.x) - 1, Int(position.y)] {
             start = position + Vector(0.5, progress)
             end = position + Vector(0.5, 1 + progress)
         } else {

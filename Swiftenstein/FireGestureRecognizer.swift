@@ -19,15 +19,15 @@ class FireGestureRecognizer: UIGestureRecognizer {
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
         super.touchesBegan(touches, with: event)
-        //record the start times of each touch
+        // record the start times of each touch
         for touch in touches {
             startTimes[touch.hash] = touch.timestamp
         }
     }
-    
+
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
         super.touchesMoved(touches, with: event)
-        //discard any touches that have moved
+        // discard any touches that have moved
         isAutofireEngaged = false
         for touch in touches {
             let newPos = touch.location(in: view)
@@ -41,14 +41,14 @@ class FireGestureRecognizer: UIGestureRecognizer {
             }
         }
     }
-    
+
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
         super.touchesEnded(touches, with: event)
         isAutofireEngaged = false
         for touch in touches {
             let startTime = startTimes[touch.hash]
             if let startTime = startTime {
-                //check if within time
+                // check if within time
                 let timeDelta = touch.timestamp - startTime
                 if timeDelta < timeThreshold {
                     state = .recognized
@@ -59,7 +59,7 @@ class FireGestureRecognizer: UIGestureRecognizer {
             state = .failed
         }
     }
-    
+
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
         super.touchesCancelled(touches, with: event)
         isAutofireEngaged = false

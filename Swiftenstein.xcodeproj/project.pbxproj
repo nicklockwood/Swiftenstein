@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0123994222820CC70013E750 /* Switch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0123994122820CC70013E750 /* Switch.swift */; };
+		01239944228224540013E750 /* Switcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01239943228224540013E750 /* Switcher.swift */; };
 		0161D2A3227D1AC200C444F2 /* UIImage+Bitmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0161D2A2227D1AC200C444F2 /* UIImage+Bitmap.swift */; };
 		01E2FACD2267A9C9003758DF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E2FACC2267A9C9003758DF /* AppDelegate.swift */; };
 		01E2FACF2267A9C9003758DF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E2FACE2267A9C9003758DF /* ViewController.swift */; };
@@ -45,6 +47,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0123994122820CC70013E750 /* Switch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Switch.swift; sourceTree = "<group>"; };
+		01239943228224540013E750 /* Switcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Switcher.swift; sourceTree = "<group>"; };
 		0161D2A2227D1AC200C444F2 /* UIImage+Bitmap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Bitmap.swift"; sourceTree = "<group>"; };
 		01E2FAC92267A9C9003758DF /* Swiftenstein.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Swiftenstein.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		01E2FACC2267A9C9003758DF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -175,6 +179,7 @@
 				01ED4C0F22765307005FE473 /* Killable.swift */,
 				01ED4C112276532F005FE473 /* Armed.swift */,
 				01ED4C1322765352005FE473 /* Trigger.swift */,
+				01239943228224540013E750 /* Switcher.swift */,
 			);
 			path = Behaviors;
 			sourceTree = "<group>";
@@ -186,6 +191,7 @@
 				01ED4C17227653E4005FE473 /* Player.swift */,
 				01ED4C192276542E005FE473 /* Monster.swift */,
 				01ED4C1B22765452005FE473 /* Door.swift */,
+				0123994122820CC70013E750 /* Switch.swift */,
 				01ED4BEC2270CFDC005FE473 /* PushWall.swift */,
 				01ED4C1D2276549C005FE473 /* Explosion.swift */,
 				01ED4BF42273C109005FE473 /* Pickup.swift */,
@@ -268,6 +274,7 @@
 				01ED4C0E22765289005FE473 /* Movable.swift in Sources */,
 				01ED4C2222765695005FE473 /* GameSetup.swift in Sources */,
 				01ED4C1E2276549C005FE473 /* Explosion.swift in Sources */,
+				0123994222820CC70013E750 /* Switch.swift in Sources */,
 				01ED4C1A2276542E005FE473 /* Monster.swift in Sources */,
 				01ED4C2622765E03005FE473 /* Bitmap.swift in Sources */,
 				01E2FACF2267A9C9003758DF /* ViewController.swift in Sources */,
@@ -280,6 +287,7 @@
 				01ED4BEF2270D02C005FE473 /* Actor.swift in Sources */,
 				01ED4BFE22764E26005FE473 /* LineSegment.swift in Sources */,
 				01ED4BFA22764DAD005FE473 /* Circle.swift in Sources */,
+				01239944228224540013E750 /* Switcher.swift in Sources */,
 				01ED4BE9226F8B00005FE473 /* World.swift in Sources */,
 				01ED4BED2270CFDC005FE473 /* PushWall.swift in Sources */,
 				01ED4C0C2276526C005FE473 /* Sprite.swift in Sources */,

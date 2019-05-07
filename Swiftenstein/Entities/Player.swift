@@ -11,9 +11,10 @@ protocol PlayerDelegate: AnyObject {
     func playerWasHurt(_ player: Player)
     func playerWasKilled(_ player: Player)
     func playerPoweredUp(_ player: Player)
+    func playerDidEndLevel(_ player: Player)
 }
 
-class Player: Actor, Killable, Armed {
+class Player: Actor, Killable, Armed, Switcher {
     let fov: Double = .pi / 2 // TODO:
     var radius = 0.2
 
@@ -112,6 +113,10 @@ class Player: Actor, Killable, Armed {
             })
         }
         delegate?.playerPoweredUp(self)
+    }
+
+    func didActivateSwitch(_: Switch) {
+        delegate?.playerDidEndLevel(self)
     }
 
     func update(dt: TimeInterval) {

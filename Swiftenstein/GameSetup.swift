@@ -73,6 +73,11 @@ let images = [
     "bullet-impact0", // 39
     "bullet-impact1",
     "bullet-impact2",
+    // elevator
+    "elevator-door", // 42
+    "elevator-wall",
+    "elevator-switch-off",
+    "elevator-switch-on",
 ].map(UIImage.init(named:))
 
 let textures = images.map { Bitmap(image: $0!)! }
@@ -142,6 +147,10 @@ extension PickupType {
 
 // MARK: Set up world
 
+extension Animation {
+    static let elevatorSwitch = Animation(duration: 0.25, mode: .clamp, frames: [43, 44])
+}
+
 extension MapTile: ExpressibleByIntegerLiteral {
     init(integerLiteral value: Int) {
         switch value {
@@ -149,8 +158,12 @@ extension MapTile: ExpressibleByIntegerLiteral {
             self = .floor
         case _ where value < 0:
             self = .pushWall(1 + value)
-        case _ where value > 10:
-            self = .door(value - 1, frame: value)
+        case 30, 43:
+            self = .door(value - 1, frame: 30)
+        case 44:
+            self = .elevator(value - 1)
+        case 45:
+            self = .switch(value - 1, alt: value)
         default:
             self = .wall(value - 1)
         }
@@ -159,6 +172,7 @@ extension MapTile: ExpressibleByIntegerLiteral {
 
 func makeWorld(delegate: PlayerDelegate) -> World {
     let world = World(
+        // swiftformat:disable spaceAroundOperators
         map: Map(width: 24, tiles: [
             8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4, 6, 4, 4, 6, 4, 6, 4, 4, 4, 6, 4,
             8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
@@ -166,32 +180,33 @@ func makeWorld(delegate: PlayerDelegate) -> World {
             8, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6,
             8, 0, 3, 3, 0, 0, 0, 0, 0, 8, 8, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
             8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 4, 0, 0, 0, 0, 0, 6, 6, 6, 0, 6, 4, 6,
-            8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 4, 4, -1, 4, 4, 4, 6, 0, 0, 0, 0, 0, 6,
+            8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 4, 4,-1, 4, 4, 4, 6, 0, 0, 0, 0, 0, 6,
             7, 7, 7, 7, 0, 7, 7, 7, 7, 0, 8, 0, 8, 0, 8, 0, 8, 4, 0, 4, 0, 6, 0, 6,
-            7, 7, 0, 0, 0, 0, 0, 0, 7, 8, 0, 8, 0, 0, 0, 8, 8, 6, 0, 0, 0, 0, 0, 4,
-            7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 0, 0, 0, 0, 0, 4,
-            7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 6, 0, 6, 0, 6, 0, 6,
+            7, 7, 0, 0, 0, 0, 0, 0, 7, 8, 0, 8, 0, 0, 0, 8, 8, 6, 0, 0, 0, 0, 4, 4,
+            7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,30, 0, 0, 0, 0, 0, 0, 6,
+            7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 6, 0, 6, 0, 6, 6, 6,
             7, 7, 0, 0, 0, 0, 0, 0, 7, 8, 0, 8, 0, 8, 0, 8, 8, 6, 4, 6, 0, 6, 6, 6,
             7, 7, 7, 7, 0, 7, 7, 7, 7, 8, 8, 4, 0, 6, 8, 4, 8, 3, 3, 3, 0, 3, 3, 3,
             2, 2, 2, 2, 0, 2, 2, 2, 2, 4, 6, 4, 0, 0, 6, 0, 6, 3, 0, 0, 0, 0, 0, 3,
             2, 2, 0, 0, 0, 0, 0, 2, 2, 4, 0, 0, 0, 0, 0, 0, 4, 3, 0, 0, 0, 0, 0, 3,
             2, 0, 0, 0, 0, 0, 0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 4, 3, 0, 0, 0, 0, 0, 3,
             1, 0, 0, 0, 0, 0, 0, 0, 1, 4, 4, 0, 4, 4, 6, 0, 6, 3, 3, 0, 0, 0, 3, 3,
-            2, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, -1, 2, 2, 2, 6, 6, 0, 0, 5, 0, 5, 0, 5,
+            2, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2,-1, 2, 2, 2, 6, 6, 0, 0, 5, 0, 5, 0, 5,
             2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 0, 5, 0, 5, 0, 0, 0, 5, 5,
             2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 5, 0, 5, 0, 5, 0, 5, 0, 5,
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5,
-            2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 5, 0, 5, 0, 5, 0, 5, 0, 5,
-            2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 0, 5, 0, 5, 0, 0, 0, 5, 5,
-            2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+            2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 5, 5,43, 5, 5, 0, 5, 0, 5,
+            2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 0, 5,44, 5, 0, 0, 0, 0, 5,
+            2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 5, 5,45, 5, 5, 5, 5, 5, 5,
         ])
+        // swiftformat:enable spaceAroundOperators
     )
 
     func randomEntityPosition() -> Vector? {
         var locations = [Vector]()
         for y in 0 ..< world.map.height {
             for x in 0 ..< world.map.width {
-                if world.map[x, y] == .floor {
+                if case .floor = world.map[x, y] {
                     locations.append(Vector(Double(x) + 0.5, Double(y) + 0.5))
                 }
             }
@@ -264,10 +279,13 @@ func makeWorld(delegate: PlayerDelegate) -> World {
             case let .door(texNum, frame: _):
                 let door = Door(world: world, texture: texNum, x: x, y: y)
                 world.entities.append(door)
+            case .switch:
+                let `switch` = Switch(world: world, x: x, y: y)
+                world.entities.append(`switch`)
             case let .pushWall(texNum):
                 let pushWall = PushWall(world: world, texture: texNum, x: x, y: y)
                 world.entities.append(pushWall)
-            default:
+            case .floor, .wall, .elevator:
                 break
             }
         }

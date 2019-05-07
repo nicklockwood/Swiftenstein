@@ -22,6 +22,7 @@ class ViewController: UIViewController {
     var timer: Timer?
     var simulationTime: TimeInterval = 0
     var runningTime: TimeInterval = 0
+    var levelComplete = false
     var gameOver = false
     var firePressed = false
 
@@ -69,7 +70,7 @@ class ViewController: UIViewController {
             // update player orientation (allowed even after death)
             world.player.rotate(turn * simulationStep)
 
-            if !world.player.isDead {
+            if !world.player.isDead, !levelComplete {
                 // update player position
                 world.player.advance(walk * simulationStep)
 
@@ -151,6 +152,9 @@ extension ViewController: PlayerDelegate {
     }
 
     func playerWasKilled(_: Player) {
+        if levelComplete {
+            return // Can't be killed after level complete
+        }
         view.backgroundColor = .red
         imageView.alpha = 0.5
         UIView.animate(withDuration: 0.5, animations: {
@@ -175,6 +179,24 @@ extension ViewController: PlayerDelegate {
             if finished {
                 self.view.backgroundColor = .black
             }
+        })
+    }
+
+    func playerDidEndLevel(_: Player) {
+        view.backgroundColor = .white
+        imageView.alpha = 0.5
+        levelComplete = true
+        UIView.animate(withDuration: 0.5, animations: {
+            self.imageView.alpha = 1
+        }, completion: { _ in
+            self.view.backgroundColor = .white
+            UIView.animate(withDuration: 2, animations: {
+                self.imageView.alpha = 0
+            }, completion: { _ in
+                self.gameOver = true
+                self.levelComplete = false
+                self.fireGesture.timeThreshold = 1
+            })
         })
     }
 }

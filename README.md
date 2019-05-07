@@ -23,9 +23,9 @@ If you have a phone with 3D Touch support you can force-touch to autofire. Other
 
 Enemies are placed randomly, so if you're unlucky you may be shot in the back immediately when the game starts. You have limited health and ammo, but if you turn right at the start you'll see a submachine gun that should help your chances of survival.
 
-There's no way to complete the level currently. Just shoot all the guards and try not to get killed.
+There are a couple of secret sliding pushwalls - see if you can find them. Be careful not to accidentally crush yourself to death!
 
-There are a couple of secret sliding pushwalls somewhere - see if you can find them. If you've killed all the guards and you want to restart the level, you can use a pushwall to crush yourself to death.
+Find the elevator switch to complete the level. Once you flip the switch, the level will reset.
 
 ## How it Works
 

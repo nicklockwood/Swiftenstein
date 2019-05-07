@@ -98,12 +98,14 @@ class PushWall: Trigger {
         let oldPos = position
         position += direction * dt * 0.2
         if direction.x < 0 || direction.y < 0 {
-            if world.map[Int(position.x), Int(position.y)] != .floor {
+            guard case .floor = world.map[Int(position.x), Int(position.y)] else {
                 position = oldPos
                 stopMoving()
                 return
             }
-        } else if world.map[Int(ceil(position.x)), Int(ceil(position.y))] != .floor {
+        } else if case .floor = world.map[Int(ceil(position.x)), Int(ceil(position.y))] {
+            // continue
+        } else {
             stopMoving()
             return
         }
